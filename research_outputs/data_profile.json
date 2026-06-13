@@ -1,0 +1,35 @@
+{
+  "posts_loaded": 9979,
+  "prs_sampled": 240,
+  "outlets_loaded": 100,
+  "interactions": 24000,
+  "positive_rate": 0.15,
+  "label_mode": "proxy_from_available_pr_titles_and_outlet_engagement",
+  "split_info": {
+    "train_end": "2024-04-11",
+    "validation_end": "2024-12-18",
+    "protocol": "time_based_by_press_release_post_date"
+  },
+  "config": {
+    "seed": 42,
+    "max_prs": 240,
+    "max_outlets": 100,
+    "tfidf_max_features": 1600,
+    "hash_dim": 160,
+    "categorical_hash_dim": 96,
+    "deepfm_factors": 8,
+    "deepfm_hidden": 32,
+    "deepfm_epochs": 8,
+    "logistic_epochs": 70,
+    "batch_size": 2048,
+    "top_ks": [
+      5,
+      10,
+      20
+    ],
+    "parse_xml_bodies": false,
+    "proxy_positive_rate": 0.15,
+    "out_dir_name": "research_outputs"
+  },
+  "runtime_seconds": 73.39564589998918
+}

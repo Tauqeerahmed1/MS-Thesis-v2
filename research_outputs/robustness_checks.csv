@@ -1,0 +1,3 @@
+comparison,mean_delta_ndcg@10,ci95_low,ci95_high,ranker,precision@5,recall@5,map@5,ndcg@5,expected_clicks@5,observed_ctr@5,precision@10,recall@10,map@10,ndcg@10,expected_clicks@10,observed_ctr@10,precision@20,recall@20,map@20,ndcg@20,expected_clicks@20,observed_ctr@20
+hybrid_pagerank_score - static_tier_score,0.6620416148484942,0.6198400469658025,0.706078538294145,,,,,,,,,,,,,,,,,,,
+cold_start_low_exposure_slice,,,,hybrid_pagerank_score,0.6444444444444445,0.9375,0.8315354938271604,0.8895922516231961,3.2222222222222223,0.6444444444444445,0.35000000000000003,1.0,0.8685284391534391,0.9230621120449867,3.5,0.35000000000000003,0.17500000000000002,1.0,0.8685284391534391,0.9230621120449867,3.5,0.17500000000000002

@@ -1,0 +1,21 @@
+pr_id,pr_title,media_outlet,region,outlet_category,hybrid_pagerank_score,deepfm_pred,tfidf_similarity,pagerank,clicked
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,PR Newswire,Australia,Business & Corporate,0.5700807136415253,0.3009379,0.0,0.010940868192426087,1
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,Newsweek,Global,Business & Corporate,0.49175892975833824,0.2389112,0.0,0.010705937771183064,1
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,Reuters,Australia,Business & Corporate,0.48535720829583534,0.24097036,0.0,0.010444270443431023,1
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,Fox Business,Middle East,Business & Corporate,0.4781997837503301,0.23491871,0.0,0.010435839349668512,1
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,Business Standard,Asia,Business & Corporate,0.46305579109841755,0.20058724,0.0,0.011150163213738492,1
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,PCMag,Asia,Business & Corporate,0.45630753466602647,0.20654933,0.0,0.010745379450274992,0
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,New York Times,Canada,Business & Corporate,0.45488535234223093,0.20743285,0.0,0.010672757492050617,1
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,Inc.,Global,Business & Corporate,0.454880102509702,0.2101833,0.0,0.010579054651068863,1
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,Fortune,Asia,Business & Corporate,0.45032609206730223,0.20481564,0.0,0.010625292277225362,1
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,Bloomberg,Asia,Business & Corporate,0.4427049975472238,0.20017846,0.0,0.010554873898657977,1
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,Nasdaq,Middle East,Business & Corporate,0.44250363303396767,0.20710973,0.0,0.010313105464256204,1
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,NBC News,Canada,Business & Corporate,0.4402454247447488,0.19318026,0.0,0.010719264348893002,0
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,CBS News,Global,Business & Corporate,0.4392911444616807,0.20774132,0.0,0.010195459999269975,0
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,Morningstar,Global,Business & Corporate,0.4381747014950442,0.19360793,0.0,0.01064273278857922,0
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,Bloomberg Asia,US,Business & Corporate,0.4356543268822445,0.20119756,0.0,0.010309154064724884,1
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,Business Insider,Middle East,Business & Corporate,0.430699527321605,0.19052814,0.0,0.010523713676907857,0
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,Hindustan Times,Asia,Business & Corporate,0.4303241237756209,0.18026029,0.0,0.01086169769172116,0
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,Fast Company,Australia,Business & Corporate,0.42923378746246593,0.17765032,0.0,0.01091782696110155,0
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,iMore,Asia,Business & Corporate,0.4291224826970167,0.19365981,0.0,0.010369993697433457,1
+110736,On the Lake. Reflected Red—Wang Qingzhou’s Color Ink Works Shine at Hangzhou’s West Lake,Business Standard,Canada,Business & Corporate,0.4220758630451631,0.18630026,0.0,0.0104093628519059,1

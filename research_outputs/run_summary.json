@@ -1,0 +1,60 @@
+{
+  "posts_loaded": 9979,
+  "prs_sampled": 240,
+  "outlets_loaded": 100,
+  "interactions": 24000,
+  "positive_rate": 0.15,
+  "label_mode": "proxy_from_available_pr_titles_and_outlet_engagement",
+  "split_info": {
+    "train_end": "2024-04-11",
+    "validation_end": "2024-12-18",
+    "protocol": "time_based_by_press_release_post_date"
+  },
+  "config": {
+    "seed": 42,
+    "max_prs": 240,
+    "max_outlets": 100,
+    "tfidf_max_features": 1600,
+    "hash_dim": 160,
+    "categorical_hash_dim": 96,
+    "deepfm_factors": 8,
+    "deepfm_hidden": 32,
+    "deepfm_epochs": 8,
+    "logistic_epochs": 70,
+    "batch_size": 2048,
+    "top_ks": [
+      5,
+      10,
+      20
+    ],
+    "parse_xml_bodies": false,
+    "proxy_positive_rate": 0.15,
+    "out_dir_name": "research_outputs"
+  },
+  "runtime_seconds": 73.39564589998918,
+  "best_semantic_column": "tfidf_similarity",
+  "hybrid_no_pagerank_weights": {
+    "semantic": 0.35,
+    "ctr": 0.6499999999999999,
+    "pagerank": 1.1102230246251565e-16,
+    "val_ndcg@10": 0.8466792935420259
+  },
+  "hybrid_pagerank_weights": {
+    "semantic": 0.2,
+    "ctr": 0.49999999999999994,
+    "pagerank": 0.3000000000000001,
+    "val_ndcg@10": 0.8637795073115179
+  },
+  "calibration": {
+    "platt_slope": 1.0966686010360718,
+    "platt_intercept": -0.7183233798684343
+  },
+  "embedding_modes": {
+    "distilled_encoder": "hash_fallback_no_local_transformer_runtime",
+    "llama_slm": "hash_fallback_no_local_transformer_runtime",
+    "ministral_slm": "hash_fallback_no_local_transformer_runtime",
+    "phi_slm": "hash_fallback_no_local_transformer_runtime",
+    "qwen_slm": "hash_fallback_no_local_transformer_runtime",
+    "smollm_slm": "hash_fallback_no_local_transformer_runtime"
+  }
+}
