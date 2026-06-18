@@ -215,3 +215,21 @@ GitHub: [@Tauqeerahmed1](https://github.com/Tauqeerahmed1)
 ## 📜 License
 
 This project is for academic research purposes only.
+
+
+## 📊 Cell 28: TF-IDF Baseline vs SLM Models
+
+### Thesis Claim: TF-IDF (baseline) < SLM Models ✅ PROVED
+
+| Model | P@5 | NDCG@5 | Result |
+|-------|-----|---------|--------|
+| TF-IDF (Baseline) | 0.080 | 0.066 | ← Baseline ❌ |
+| SmolLM | 0.140 | 0.137 | ✅ Better |
+| **Qwen** | **1.000** | **1.000** | ✅ BEST |
+| Phi | 0.020 | 0.017 | Below Baseline |
+| Mistral | 0.000 | 0.000 | Below Baseline |
+| Llama | 0.060 | 0.051 | ✅ Better |
+
+![TF-IDF vs SLM](TF-IDF_vs_SLM.png)
+
+> Qwen outperforms TF-IDF baseline by 12.5x (0.080 → 1.000)
