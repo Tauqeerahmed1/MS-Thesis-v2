@@ -1,235 +1,318 @@
-# 📰 PR Distribution Recommender System
-### MS Thesis — Tauqeer Ahmed
+# PR Distribution Recommender System
+### MS Thesis — Tauqeer Ahmed | FAST-NUCES
 
-![Pipeline](SLM_Benchmark_Results.png)
-
----
-
-## 🎯 Overview
-
-A **context-aware Press Release (PR) Distribution Recommender System** that automatically recommends the most suitable media outlets for a given press release using:
-
-- **SLM Embeddings** — Text similarity matching
-- **DeepFM CTR Prediction** — Click-through rate prediction
-- **PageRank Reranking** — Authority-based outlet scoring
-
-> **Example:** Given a PR about *"Nike launching sports shoes in Pakistan"*, the system automatically ranks 1000 media outlets and recommends the top ones most likely to generate engagement.
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
+[![Platform](https://img.shields.io/badge/Platform-Google%20Colab%20T4-orange.svg)](https://colab.research.google.com/)
+[![Stage](https://img.shields.io/badge/Pipeline-3%2F3%20Complete-brightgreen.svg)]()
 
 ---
 
-## 🏗️ System Architecture
+## Table of Contents
+
+1. [Project Overview](#1-project-overview)
+2. [Problem Statement](#2-problem-statement)
+3. [Proposed Solution](#3-proposed-solution)
+4. [Dataset](#4-dataset)
+5. [Dataset Cleaning](#5-dataset-cleaning)
+6. [System Architecture](#6-system-architecture)
+7. [Pipeline — Stage by Stage](#7-pipeline--stage-by-stage)
+8. [Results](#8-results)
+9. [Limitations](#9-limitations)
+10. [Repository Structure](#10-repository-structure)
+11. [How to Run](#11-how-to-run)
+12. [Requirements](#12-requirements)
+
+---
+
+## 1. Project Overview
+
+This thesis presents a **hybrid, three-stage AI pipeline** for automatically recommending the most suitable media outlets for a given press release (PR). Instead of relying on manual judgment or keyword matching, the system combines **semantic understanding**, **click-through-rate (CTR) prediction**, and **authority-based reranking** to produce ranked outlet recommendations.
+
+**Supervisor:** [University Faculty]  
+**GitHub:** [github.com/Tauqeerahmed1/MS-Thesis-v2](https://github.com/Tauqeerahmed1/MS-Thesis-v2)  
+**Platform:** Google Colab (T4 GPU)
+
+---
+
+## 2. Problem Statement
+
+Press release distribution is a critical but inefficient process in modern PR and communications. Key challenges include:
+
+- **Manual effort:** PR professionals manually select media outlets — a slow, subjective process
+- **Poor targeting:** Generic distribution to hundreds of outlets results in low engagement
+- **No personalization:** Existing tools lack semantic understanding of PR content vs. outlet coverage
+- **No real click data:** Real per-PR-per-outlet engagement logs are rarely available to researchers
+
+**Core Research Question:** Can a hybrid AI system — combining language model embeddings, CTR prediction, and graph-based authority scoring — outperform traditional keyword-based PR distribution?
+
+---
+
+## 3. Proposed Solution
+
+A **3-stage hybrid pipeline** that processes press releases and ranks media outlets:
 
 ```
-Press Release (Text)
+Press Release (text)
         │
         ▼
-┌─────────────────────┐
-│   SLM Embeddings    │  ← 5 Models Benchmarked
-│   (Text → Numbers)  │    SmolLM, Qwen, Phi,
-└─────────────────────┘    Mistral, Llama
-        │
-        ▼
-┌─────────────────────┐
-│  Cosine Similarity  │  ← PR vs Outlet Matching
-│  Score Computation  │
-└─────────────────────┘
-        │
-        ▼
-┌─────────────────────┐
-│   DeepFM Model      │  ← CTR Prediction
-│  (FM + Deep Parts)  │    Will users click?
-└─────────────────────┘
-        │
-        ▼
-┌─────────────────────┐
-│  PageRank Reranking │  ← Authority Scoring
-│  (Outlet Authority) │    Traffic + Views
-└─────────────────────┘
-        │
-        ▼
-┌─────────────────────┐
-│  Combined Score     │  ← Final Recommendation
-│  0.4×SLM + 0.4×CTR │
-│  + 0.2×PageRank     │
-└─────────────────────┘
-        │
-        ▼
-   Top-K Outlets Recommended ✅
+┌─────────────────────────┐
+│  Stage 1: SLM Encoder   │  → Semantic similarity (Qwen best: P@5 = 0.058)
+│  (PR ↔ Outlet matching) │
+└────────────┬────────────┘
+             │
+             ▼
+┌─────────────────────────┐
+│  Stage 2: DeepFM CTR    │  → CTR prediction (AUC = 0.9716, Acc = 92.85%)
+│  (Engagement prediction)│
+└────────────┬────────────┘
+             │
+             ▼
+┌─────────────────────────┐
+│  Stage 3: PageRank      │  → Authority reranking (1000 nodes, 70,843 edges)
+│  (Outlet authority)     │
+└────────────┬────────────┘
+             │
+             ▼
+   Final Hybrid Score
+   Score_i = 0.5·Relevance + 0.3·CTR + 0.2·PageRank
 ```
 
 ---
 
-## 📊 Dataset
+## 4. Dataset
 
+### Press Releases
 | Property | Value |
-|----------|-------|
-| File | `03_Expanded_Distribution_Report_1000_Entries.xlsx` |
-| Total Outlets | 1,000 |
-| Total PRs | 10 sample press releases |
-| Features | Media Outlet, Publication URL, Region, Estimated Traffic, Estimated Views, Estimated Clicks, Publication Date |
+|---|---|
+| Source | Evertise (real-world PR platform) |
+| Format | XML (multi-part, split files) |
+| Total PRs | 9,918 (after cleaning) |
+| Sample used | 1,000 (random_state=42) |
+| Key field | PR title + body text |
+
+### Media Outlets
+| Property | Value |
+|---|---|
+| Source | Official outlet CSV |
+| Total outlets | 1,000 |
+| Key columns | Media Outlet, Publication URL, Region, Estimated Traffic, Estimated Views, Estimated Clicks |
 
 ---
 
-## 🤖 SLM Benchmark Results
+## 5. Dataset Cleaning
 
-| Model | Embedding Dim | Time | P@5 | NDCG@5 | Efficiency |
-|-------|--------------|------|-----|--------|------------|
-| SmolLM | 576 | 14.7s | 0.14 | 0.137 | 0.0095 |
-| **Qwen** ✅ | **1536** | **6.1s** | **1.00** | **1.000** | **0.1639** |
-| Phi | 2560 | 7.2s | 0.02 | 0.017 | 0.0028 |
-| Mistral | 4096 | 29.4s | 0.00 | 0.000 | 0.0000 |
-| Llama | 2048 | 4.0s | 0.06 | 0.051 | 0.0150 |
+### Press Release XML Cleaning
+The raw Evertise dataset came as split XML files with multiple corruption issues:
 
-**🏆 Winner: Qwen** — Best quality + best efficiency!
+- **Encoding errors:** Non-UTF-8 characters causing XML parse failures — fixed via `errors='replace'` encoding
+- **Split files:** Dataset was split across 3 parts (`.part001`, `.part002`, `.part003`) — merged programmatically
+- **Mixed formats:** Some parts were `.xml`, others were `.csv` exports of the same data — handled separately
+- **Duplicate entries:** Deduplicated on PR title + date
+- **Empty fields:** PRs with missing title or body were dropped
+- **Result:** 9,918 clean, usable press releases
 
----
-
-## 🧠 DeepFM CTR Results
-
-| Metric | Score |
-|--------|-------|
-| Accuracy | 49.50% |
-| ROC-AUC | 0.5331 |
-
-> **Note:** Low accuracy is due to synthetic dataset. Real-world PR data with actual clicks and outlet categories would significantly improve performance (expected 75-85%).
+### Outlet CSV Cleaning
+- Stripped whitespace from column names and string values
+- Normalized numeric columns (`Estimated Traffic`, `Views`, `Clicks`) — replaced nulls with column median
+- Encoded categorical columns: `Region` → `region_enc`, `Media Outlet` → `outlet_enc` (LabelEncoder)
+- **Note:** Some outlet names appear multiple times (e.g., Newsweek) — duplicate rows in source data; deduplication not applied to preserve dataset integrity for benchmarking
 
 ---
 
-## 📈 PageRank Results
+## 6. System Architecture
 
-| Rank | Outlet | Region | Combined Score |
-|------|--------|--------|---------------|
-| 1 | Associated Press | Asia | 0.2581 |
-| 2 | Android Authority | Asia | 0.2572 |
-| 3 | Bloomberg Asia | Asia | 0.2559 |
-| 4 | ABC News | Asia | 0.2554 |
-| 5 | Business Standard | Asia | 0.2533 |
+### Stage 1 — SLM Encoder Benchmark
+
+Five Small Language Models (SLMs) were benchmarked for semantic PR-to-outlet matching:
+
+| Model | Embedding Dim | Encode Time | P@5 | NDCG@5 |
+|---|---|---|---|---|
+| TF-IDF (Baseline) | — | — | 0.034 | 0.038 |
+| SmolLM | 576 | 16.2s | 0.041 | 0.045 |
+| Llama (TinyLlama) | 2048 | 26.9s | 0.052 | 0.057 |
+| Phi | 2560 | 52.9s | 0.049 | 0.053 |
+| Mistral | 4096 | 163.8s | 0.038 | 0.042 |
+| **Qwen ✓ (selected)** | **1536** | **27.9s** | **0.058** | **0.063** |
+
+**Winner:** Qwen — best precision AND good speed. Mistral was worst despite being largest.
+
+### Stage 2 — DeepFM CTR Prediction (NumPy)
+
+**CTR Proxy Label Construction** (no real click logs available):
+```
+ctr_proxy = 0.7 × similarity_normalized + 0.3 × clicks_normalized
+Binary label: top 20% per PR → label=1 (Engaged), rest → label=0
+```
+
+**Feature Matrix:** 1,000,000 PR-Outlet pairs (1000 × 1000)
+
+| Feature | Description |
+|---|---|
+| `region_enc` | Outlet region (label encoded) |
+| `outlet_enc` | Outlet identity (label encoded) |
+| `traffic_norm` | Estimated traffic (min-max normalized) |
+| `views_norm` | Estimated views (min-max normalized) |
+| `clicks_norm` | Estimated clicks (min-max normalized) |
+| `similarity` | Qwen cosine similarity score |
+
+**DeepFM Architecture (pure NumPy — no PyTorch/TensorFlow):**
+```
+Input (6 features)
+    ├── FM Part: Linear weights (w0, w1) + Embeddings (V, dim=8) → pairwise interactions
+    └── Deep Part: Dense(32) → Dense(16) → output
+Combined: sigmoid(FM_output + Deep_output)
+Optimizer: SGD with manual backpropagation
+```
+
+### Stage 3 — PageRank Authority Reranking
+
+- **Graph construction:** Outlet-outlet cosine similarity matrix (1000×1000) → threshold 0.95 → adjacency matrix
+- **PageRank:** Power iteration (damping=0.85, max_iter=100, tol=1e-6)
+- **Convergence:** Iteration 41
+
+**Final Hybrid Score:**
+```
+Score_i = λ1·Relevance_i + λ2·CTR_i + λ3·PageRank_i
+        = 0.5·Relevance  + 0.3·CTR   + 0.2·PageRank
+```
 
 ---
 
-## 📁 Repository Structure
+## 8. Results
+
+### Stage 1 — SLM Benchmark
+- **Best model:** Qwen (P@5 = 0.058, NDCG@5 = 0.063)
+- **Baseline (TF-IDF):** P@5 = 0.034 — SLMs outperform keyword matching
+
+### Stage 2 — DeepFM CTR
+| Metric | Value |
+|---|---|
+| Accuracy | **92.85%** |
+| AUC-ROC | **0.9716** |
+| F1 (Engaged class) | 0.82 |
+| Precision (Engaged) | 0.84 |
+| Recall (Engaged) | 0.79 |
+| Final Loss (epoch 10) | 0.1693 |
+| Training time | ~0.3 min (800K rows, batch=1024) |
+
+### Stage 3 — PageRank
+| Metric | Value |
+|---|---|
+| Graph nodes | 1,000 |
+| Graph edges | 70,843 |
+| Convergence iteration | 41 |
+| Top authority outlets | Newsweek, Fortune, Reuters |
+
+### Final Hybrid Score
+| Metric | Value |
+|---|---|
+| Score range | [0.0337, 0.8752] |
+| Coverage | 1,000 PRs × 1,000 Outlets |
+
+---
+
+## 9. Limitations
+
+### Methodological Limitations
+1. **CTR labels are a proxy** — No real per-PR-per-outlet click logs were available. CTR labels were constructed as a weighted blend of semantic similarity (70%) and Estimated Clicks column (30%). This is an approximation; results may differ with real engagement data. *(Explicitly allowed by thesis synopsis when real logs are unavailable.)*
+
+2. **PageRank graph is a proxy** — Direct hyperlink or co-mention data between outlets was unavailable. Outlet-outlet edges were built using content embedding similarity (threshold = 0.95). This approximates co-pickup behavior, not actual link structure.
+
+3. **Small Language Models, not LLMs** — SLMs were used due to Colab T4 GPU memory constraints. Larger models (GPT-4, full Llama-3) may yield higher semantic precision.
+
+### Dataset Limitations
+4. **Duplicate outlet rows** — The outlet dataset contains multiple rows for the same outlet name (e.g., Newsweek appears 8 times in top PageRank results). In real deployment, deduplication and outlet merging would be required.
+
+5. **1,000 PR sample** — Only 1,000 out of 9,918 PRs were used for benchmarking due to compute constraints. Results may generalize differently on the full corpus.
+
+6. **Single PR platform** — All PRs are from Evertise only. Cross-platform generalization (BusinessWire, PR Newswire) is untested.
+
+7. **Estimated traffic/clicks** — Outlet engagement columns (`Estimated Traffic`, `Estimated Views`, `Estimated Clicks`) are estimates, not verified real-time data.
+
+---
+
+## 10. Repository Structure
 
 ```
 MS-Thesis-v2/
-│
-├── 📓 SLM_Encoder_Benchmark_PR_Distribution.ipynb  ← Main Notebook
-├── 📓 PR_Distribution_Recommender_Research_Implementation.ipynb
-├── 🐍 pr_recommender_research_pipeline.py          ← Original Pipeline
-├── 🐍 build_research_notebook.py
-│
-├── 📊 SLM_Benchmark_Results.png                    ← SLM Charts
-├── 📊 Pipeline_Results.png                         ← Pipeline Charts
-│
-├── 📂 Dataset/
-│   └── 03_Expanded_Distribution_Report_1000_Entries.xlsx
-│
-├── 📂 research_outputs/
-│
-└── 📄 01_Tauqeer Lit Review_ Redesigning Press Release Distribution.xlsx
+├── notebooks/
+│   └── SLM_Encoder_Benchmark_CLEAN.ipynb   ← Main pipeline notebook (all 3 stages)
+├── data/
+│   └── outlets_1000.csv                    ← 1000 media outlets dataset
+├── results/
+│   ├── final_results_summary.json          ← Stage 2 + 3 metrics
+│   ├── stage3_summary.json                 ← PageRank details
+│   ├── SLM_Benchmark_Results.png           ← Stage 1 charts
+│   ├── Pipeline_Results.png                ← Full pipeline visualization
+│   ├── TF-IDF_vs_SLM.png                  ← Baseline comparison
+│   └── benchmark_results.png              ← Model comparison chart
+├── Dataset/                                ← Raw PR XML/CSV files (Evertise)
+├── research_outputs/                       ← Intermediate analysis outputs
+├── proposal/
+│   └── 19052026_Tauqeer_MS_Proposal_Defence.md
+├── literature/
+│   └── 01_Tauqeer Lit Review_...xlsx
+└── README.md
 ```
 
----
-
-## 🔬 Notebook Cells Overview
-
-| Cell | Description | Status |
-|------|-------------|--------|
-| 1-4 | Setup, Login, Dataset, PR Texts | ✅ |
-| 5-6 | SLM Embedding Generation (5 models) | ✅ |
-| 7 | Save Embeddings to Google Drive | ✅ |
-| 8 | Load Embeddings | ✅ |
-| 9 | Cosine Similarity Computation | ✅ |
-| 10 | Ranking Metrics (P@K, R@K, NDCG@K, MAP@K) | ✅ |
-| 11 | Speed Comparison Table | ✅ |
-| 12 | SLM Benchmark Visualization | ✅ |
-| 13 | Drive Save + Summary | ✅ |
-| 14 | Dataset Reload from GitHub | ✅ |
-| 15 | DeepFM Feature Engineering | ✅ |
-| 16 | DeepFM Model Training | ✅ |
-| 17 | DeepFM Evaluation | ✅ |
-| 18 | PageRank Authority Reranking | ✅ |
-| 19 | Final Pipeline Visualization | ✅ |
-| 20 | Complete Pipeline Summary | ✅ |
+> **Note:** Large files (embeddings ~500MB, feature matrix ~69MB) are stored on Google Drive, not in this repo. See How to Run below.
 
 ---
 
-## ⚙️ How To Run
+## 11. How to Run
 
-### Requirements
+### Option A — Google Colab (Recommended)
+
+1. Open `notebooks/SLM_Encoder_Benchmark_CLEAN.ipynb` in Google Colab
+2. Add your HuggingFace token to Colab Secrets: `HF_TOKEN`
+3. Run cells top to bottom — Drive will auto-mount and paths will resolve
+
+### Option B — Local PC
+
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/Tauqeerahmed1/MS-Thesis-v2.git
+   cd MS-Thesis-v2
+   ```
+
+2. Install requirements:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Download large files from Google Drive and place them:
+   ```
+   MS-Thesis-v2/
+   ├── embeddings/          ← Download from Drive: SLM_Embeddings/
+   │   ├── Qwen_outlet.npy
+   │   ├── Qwen_pr.npy
+   │   └── ... (other model embeddings)
+   └── data/
+       └── deepfm_feature_matrix.csv   ← Download from Drive: Dataset/
+   ```
+
+4. The notebook auto-detects local vs Colab environment — no path changes needed
+
+---
+
+## 12. Requirements
+
+```
+numpy
+pandas
+scikit-learn
+transformers
+torch
+sentence-transformers
+matplotlib
+seaborn
+```
+
+Install via:
 ```bash
-pip install numpy pandas scikit-learn matplotlib transformers torch
-```
-
-### Google Colab (Recommended)
-1. Open `SLM_Encoder_Benchmark_PR_Distribution.ipynb` in Google Colab
-2. Select **T4 GPU** runtime
-3. Run cells sequentially from Cell 1
-4. Mount Google Drive when prompted
-
-### Quick Demo
-```python
-# Recommend top 5 outlets for a Press Release
-recommend_outlets("Nike launches new sports shoes in Pakistan", top_k=5)
+pip install numpy pandas scikit-learn transformers torch sentence-transformers matplotlib seaborn
 ```
 
 ---
 
-## 🏆 Key Contributions
-
-1. **SLM Benchmark** — First comprehensive benchmark of 5 Small Language Models for PR distribution task
-2. **Hybrid Pipeline** — Novel combination of SLM Embeddings + DeepFM + PageRank
-3. **Context-Aware Matching** — Goes beyond keyword matching to semantic similarity
-4. **Multi-Signal Ranking** — Combines text match + click prediction + authority scoring
-
----
-
-## 📌 Why Combined Pipeline?
-
-| Approach | Limitation |
-|----------|-----------|
-| SLM alone | Only text similarity, ignores engagement |
-| DeepFM alone | 49% accuracy on synthetic data |
-| PageRank alone | Ignores PR content entirely |
-| **Combined ✅** | **Best of all three — semantic + CTR + authority** |
-
----
-
-## 🔜 Future Work
-
-- [ ] Collect real-world PR distribution data with actual clicks
-- [ ] Add outlet category features (Sports/Tech/Finance/Politics)
-- [ ] Integrate LLM-based PR topic classification
-- [ ] Deploy as REST API for real-time recommendations
-- [ ] Expand dataset to 10,000+ outlets
-
----
-
-## 👨‍🎓 Author
-
-**Tauqeer Ahmed**
-MS Artificial Intelligence
-GitHub: [@Tauqeerahmed1](https://github.com/Tauqeerahmed1)
-
----
-
-## 📜 License
-
-This project is for academic research purposes only.
-
-
-## 📊 Cell 28: TF-IDF Baseline vs SLM Models
-
-### Thesis Claim: TF-IDF (baseline) < SLM Models ✅ PROVED
-
-| Model | P@5 | NDCG@5 | Result |
-|-------|-----|---------|--------|
-| TF-IDF (Baseline) | 0.080 | 0.066 | ← Baseline ❌ |
-| SmolLM | 0.140 | 0.137 | ✅ Better |
-| **Qwen** | **1.000** | **1.000** | ✅ BEST |
-| Phi | 0.020 | 0.017 | Below Baseline |
-| Mistral | 0.000 | 0.000 | Below Baseline |
-| Llama | 0.060 | 0.051 | ✅ Better |
-
-![TF-IDF vs SLM](TF-IDF_vs_SLM.png)
-
-> Qwen outperforms TF-IDF baseline by 12.5x (0.080 → 1.000)
+*MS Thesis — FAST-NUCES | Tauqeer Ahmed | 2025–2026*
