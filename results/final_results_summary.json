@@ -1,0 +1,27 @@
+{
+  "stage2": {
+    "accuracy": 0.9285,
+    "auc_roc": 0.9716,
+    "f1_engaged": 0.82,
+    "final_loss": 0.1693,
+    "epochs": 10,
+    "train_pairs": 800000,
+    "test_pairs": 200000
+  },
+  "stage3": {
+    "nodes": 1000,
+    "edges": 70843,
+    "threshold": 0.95,
+    "damping": 0.85,
+    "converged_iter": 41
+  },
+  "hybrid": {
+    "lambda1": 0.5,
+    "lambda2": 0.3,
+    "lambda3": 0.2,
+    "score_range": [
+      0.0337,
+      0.8752
+    ]
+  }
+}

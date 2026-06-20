@@ -1,0 +1,25 @@
+{
+  "stage3_pagerank": {
+    "graph_nodes": 1000,
+    "graph_edges": 70843,
+    "edge_threshold": 0.95,
+    "damping_factor": 0.85,
+    "converged_at_iteration": 41,
+    "pr_min": 0.00030493274918838445,
+    "pr_max": 0.0027243657460648595,
+    "pr_mean": 0.0009999999999999998,
+    "top_outlet": "Newsweek"
+  },
+  "final_hybrid": {
+    "lambda1_relevance": 0.5,
+    "lambda2_ctr": 0.3,
+    "lambda3_pagerank": 0.2,
+    "score_min": 0.033734946846188545,
+    "score_max": 0.8752302492692083,
+    "score_mean": 0.5023787496308335,
+    "matrix_shape": [
+      1000,
+      1000
+    ]
+  }
+}
